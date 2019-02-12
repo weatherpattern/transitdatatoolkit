@@ -1,10 +1,8 @@
 # Install ggplot and ggmap (this is only required once)
-install.packages('ggplot2', dependencies = TRUE)
-install.packages('ggmap', dependencies = TRUE)
+install.packages('leaflet', dependencies = TRUE)
 
-# load packages
-library(ggplot2)
-library(ggmap)
+# Load Librarys
+library(leaflet)
 
 # Read in MBTA Station txt file
 rawlocs <- read.csv(file="./stops.txt", head=TRUE,sep=",")
@@ -54,10 +52,15 @@ View(station_locs)
 write.csv(station_locs, "./mbta_stops.csv")
 
 # Map the stations
-mbta_subway <- qmap("boston", source="google",maptype="roadmap", zoom=11) 
-mbta_subway <- mbta_subway + geom_point(data=station_locs, aes(x=longitude, y=latitude), color=rgb(0,0.45,0.70,0.7), size=3)
-mbta_subway <- mbta_subway +   labs(title="MBTA Subway Stations", 
-                                  caption="Data Source: MBTA Developer Portal")
-mbta_subway
 
+mbta_subway <- leaflet(station_locs) %>%
+  addTiles() %>%  
+  setView(-71.057083, 42.361145, zoom = 12) %>%
+  addCircles(~longitude, ~latitude, weight = 3, radius=120, 
+                 color="#0073B2", stroke = TRUE, fillOpacity = 0.8) %>% 
+  addLegend("bottomleft", colors="#0073B2", labels="Data Source: MBTA Developer Portal", title="MBTA Subway Stations")
+  
+
+# show the map
+mbta_subway  
 
