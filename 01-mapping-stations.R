@@ -1,7 +1,7 @@
-# Install ggplot and ggmap (this is only required once)
+# Install leaflet (this is only required once)
 install.packages('leaflet', dependencies = TRUE)
 
-# Load Librarys
+# Load library
 library(leaflet)
 
 # Read in MBTA Station txt file
@@ -52,7 +52,6 @@ View(station_locs)
 write.csv(station_locs, "./mbta_stops.csv")
 
 # Map the stations
-
 mbta_subway <- leaflet(station_locs) %>%
   addTiles() %>%  
   setView(-71.057083, 42.361145, zoom = 12) %>%
@@ -60,7 +59,6 @@ mbta_subway <- leaflet(station_locs) %>%
                  color="#0073B2", stroke = TRUE, fillOpacity = 0.8) %>% 
   addLegend("bottomleft", colors="#0073B2", labels="Data Source: MBTA Developer Portal", title="MBTA Subway Stations")
   
-
 # show the map
 mbta_subway  
 
