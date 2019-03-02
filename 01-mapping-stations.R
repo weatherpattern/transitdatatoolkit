@@ -52,6 +52,7 @@ View(station_locs)
 write.csv(station_locs, "./mbta_stops.csv")
 
 # Map the stations
+# Lat Long corrdinates from www.latlong.net
 mbta_subway <- leaflet(station_locs) %>%
   addTiles() %>%  
   setView(-71.057083, 42.361145, zoom = 12) %>%
