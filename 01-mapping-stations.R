@@ -31,14 +31,18 @@ station_locs <- station_locs[which ((station_locs$stop_id >= 70000) & (station_l
 
 
 # Saint Paul Street Station names are altered to include their line.
-# This change is doen to be able to distinguish the two stations 
+# This change is done to be able to distinguish the two stations
 # named Saint Paul Street on the B and C line.
 
+station_locs$stop_name[station_locs$stop_id == 70140] <-  "Saint Paul Street B Line"
 station_locs$stop_name[station_locs$stop_id == 70141] <-  "Saint Paul Street B Line"
+station_locs$stop_name[station_locs$stop_id == 70217] <-  "Saint Paul Street C Line"
 station_locs$stop_name[station_locs$stop_id == 70218] <-  "Saint Paul Street C Line"
 
-# Find the unique lat and lon coordinates
-station_locs <- station_locs[!duplicated(station_locs[c("latitude", "longitude")]),]
+# Most T stations are defined by multiple station platforms, 
+# which might not be at the same latitude/longitude. 
+# Find the unique station names so we can get one observation per station
+station_locs <- station_locs[!duplicated(station_locs$stop_name),]
 
 # Select the rows which do not have Outbound in the text
 # Remove string with dash
