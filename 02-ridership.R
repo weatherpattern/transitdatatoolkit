@@ -23,7 +23,7 @@ colnames(railrides)[4] <- "Line"
 # Convert columns to characters and date data type
 tempdata <- sapply(railrides, is.factor)
 railrides[tempdata] <- lapply(railrides[tempdata], as.character)
-railrides$Month <- as.Date(railrides$Month, "%d-%b-%Y")
+railrides$Month <- as.Date(railrides$Month, "%Y-%m-%d")
 View(railrides)
 
 # Make Subway Ridership Linegraph
