@@ -1,10 +1,8 @@
-# Install ggplot and ggmap (this is only required once)
-install.packages('ggplot2', dependencies = TRUE)
-install.packages('ggmap', dependencies = TRUE)
+# Install leaflet (this is only required once)
+install.packages('leaflet', dependencies = TRUE)
 
-# load packages
-library(ggplot2)
-library(ggmap)
+# Load library
+library(leaflet)
 
 #read in MBTA performance csv file
 rawdata <- read.csv(file="./TDashboardData_reliability_20160301-20160331.csv", head=TRUE,sep=",")
@@ -54,11 +52,17 @@ joindata <- joindata[x ,]
 View(joindata)
 
 # Map the Green Line
-map_lat <- c(42.481411, 42.21244)
-map_lon <- c(-71.484765, -70.794937)
-map_bbox <- make_bbox(map_lon,map_lat, f= 0.05)
-mbta_map <- get_map(map_bbox, source="google",maptype="hybrid", zoom=12) 
-mbta_subway <- ggmap(mbta_map) + geom_point(data=joindata, aes(x=LONGITUDE, y=LATITUDE, color=rely), size=3, shape=15)+ scale_colour_gradientn(colours=c(rgb(1,1,1),rgb(0,0.45,0.70))) 
-mbta_subway <- mbta_subway +   labs(title="MBTA Green Line Reliability", 
-                                    caption="Data Source: MBTA Developer Portal")
-mbta_subway
+# Map the stations
+# Create a ColorBrewer Greens color palette. 
+colorpal <- colorNumeric(palette = "Greens", domain = joindata$rely)
+
+# Lat Long corrdinates from www.latlong.net
+mbta_subway <- leaflet(joindata) %>%
+  addTiles() %>%  
+  setView(-71.057083, 42.361145, zoom = 12) %>%
+  addCircles(~LONGITUDE, ~LATITUDE, weight = 3, radius=120, 
+             color=~colorpal(rely), stroke = TRUE, fillOpacity = 0.8) %>% 
+  addLegend("topright", colorpal, values=~rely, title="MBTA Green Line Reliability, Data Source: MBTA Developer Portal")
+
+# Show the map
+mbta_subway  
